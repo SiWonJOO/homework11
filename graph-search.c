@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -204,12 +205,70 @@ int InsertEdge(Graph* h,int v1, int v2){
 */
 
 void DFS(Graph* h,int v){
-;
+	if((h+v)->vertex==-1){
+		printf("\n vertex is not in graph \n");
+		return ;
+	}
+	Graph* p = h+v;	//그래프를 가리키는 포인터
+	Graph* ptr = NULL;	//stack 의 pop을 받을 ptr
+
+	int visited[10]; for(int i=0;i<10;i++){visited[i]=0;}	//visit flag  0으로 초기화
+	top = -1;	//stack top 초기화
+
+	//visited[v]=1;	//방문 노드 1 표시
+	//push(h+v);
+
+	while(1){
+		
+		v=p->vertex;	//헤더노드의 vertex를 받는다.
+
+		if(!visited[v]){	//해당 vertex에 방문하지 않았다면
+			printf("  [%d]  ",v);	//값을 출력
+			visited[v]=1;			//방문 flag
+			push(h+v);				//stack 에 push
+			p=h+v;					//해당 값을 가진 헤더노드로 이동
+		}
+		else {			//해당 vertex에 방문을 했다면
+			if(p->link==NULL){	//다음 노드가 존재하지 않는다면
+				ptr=pop();		//stack 을 pop 해준다.
+				//printf(" [%d] ", ptr->vertex);
+				p=h+(p->vertex);	//헤더노드 이동
+			}
+			p=p->link;	//노드 이동
+		}
+
+		if(top==-1)	break;	//stack이 비워지면 반복문 탈출
+	}
+
 }
 /*Breath First Search
 */
 void BFS(Graph* h, int v){
-;
+	Graph* p=h+v;		//그래프를 가리킬 포인터
+	
+	if((h+v)->vertex==-1){
+		printf("\n vertex is not in graph \n");
+		return ;
+	}
+	int visited[10]; for(int i=0;i<10;i++){visited[i]=0;}	//visit flag  0으로 초기화
+	rear=front=-1;
+
+	printf("  [%d]  ",v);
+	visited[v]=1;
+	enQueue(p);
+
+	for(;;){
+		p=deQueue();
+		for(p;p;p=p->link){
+			v=p->vertex;
+			if(!visited[v]){
+				printf("  [%d]  ",p->vertex);
+				enQueue(h+v);
+				visited[v]=1;
+			}
+		}
+		if(rear==front) break;
+	}
 }
 /*Graph 를 출력해주는 함수.*/
 void PrintGraph(Graph* h){
@@ -232,21 +291,27 @@ void PrintGraph(Graph* h){
 	}
 }
 
-Graph* pop()	
+Graph* pop()	//stack pop
 {
-
+	if (top < 0) return NULL;
+	return stack[top--];
+}
+void push(Graph* aNode)	//stack push 
+{	if(top>=MAX_STACK_SIZE-1) printf("stack is full\n");	
+	else stack[++top]=aNode;	
 }
 
-void push(Graph* aNode)
-{	
+Graph* deQueue()	//deQueue
+{
+	if(front==rear)	return 0;	
+ return queue[++front];	
 }
 
-Graph* deQueue()	
+int enQueue(Graph* aNode)	//enQueue
 {
-	
-}
-
-int enQueue(Graph* aNode)
-{
-
+	if(rear>=MAX_QUEUE_SIZE-1){
+	printf("queue is full\n");	
+    	}
+       queue[++rear]=aNode;
+    return 1;
 }
